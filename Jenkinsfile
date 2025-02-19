@@ -5,19 +5,19 @@ pipeline {
         cron('H/10 * * * 1') // Runs every 10 minutes on Mondays
     }
 
-    tools {
-        maven 'Maven 3' 
-        jdk 'JDK 11'   
-
-
-    environment {
-        ARTIFACT_PATH = "target/spring-petclinic.jar"
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MattBarhou/COMP367_Quiz3.git'
+                git branch: 'main', url: 'https://github.com/MattBarhou/COMP367_Quiz3.git'
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                sh 'echo "Setting up environment variables"'
+                sh 'export JAVA_HOME=$(which java)'
+                sh 'export PATH=$JAVA_HOME/bin:$PATH'
+                sh 'mvn --version' // Check if Maven is accessible
             }
         }
 
@@ -33,8 +33,8 @@ pipeline {
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
-                    jacoco execPattern: '**/target/jacoco.exec'
+                    junit '**/target/surefire-reports/*.xml'
+                    jacoco execPattern: '**/target/site/jacoco/jacoco.xml'
                 }
             }
         }
@@ -48,11 +48,10 @@ pipeline {
 
     post {
         success {
-            echo "Build succeeded! Artifact generated at ${ARTIFACT_PATH}"
+            echo "Build succeeded! Artifact generated successfully."
         }
         failure {
-            echo "Build failed!"
+            echo "Build failed! Please check logs for more details."
         }
     }
-}
 }
