@@ -37,12 +37,17 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            echo "Build succeeded! Artifact generated successfully."
-        }
-        failure {
-            echo "Build failed! Please check logs for more details."
-        }
+   post {
+    always {
+        junit '**/target/surefire-reports/*.xml'
+        jacoco(
+            execPattern: '**/target/jacoco.exec',  // Correct execution file
+            classPattern: '**/target/classes',
+            sourcePattern: '**/src/main/java',
+            inclusionPattern: '**/*.class',
+            exclusionPattern: '**/*Test*.class'
+        )
     }
+}
+
 }
