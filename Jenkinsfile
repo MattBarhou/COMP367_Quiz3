@@ -1,23 +1,14 @@
 pipeline {
     agent any
 
-    triggers {
-        cron('H/10 * * * 1') // Runs every 10 minutes on Mondays
+    tools {
+        maven 'Maven 3'  // Use the configured Maven version
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/MattBarhou/COMP367_Quiz3.git'
-            }
-        }
-
-        stage('Setup') {
-            steps {
-                sh 'echo "Setting up environment variables"'
-                sh 'export JAVA_HOME=$(which java)'
-                sh 'export PATH=$JAVA_HOME/bin:$PATH'
-                sh 'mvn --version' // Check if Maven is accessible
             }
         }
 
