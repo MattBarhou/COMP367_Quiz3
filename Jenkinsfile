@@ -8,7 +8,7 @@ pipeline {
     tools {
         maven 'Maven 3' 
         jdk 'JDK 11'   
-        
+
 
     environment {
         ARTIFACT_PATH = "target/spring-petclinic.jar"
@@ -54,4 +54,5 @@ pipeline {
             echo "Build failed!"
         }
     }
+}
 }
